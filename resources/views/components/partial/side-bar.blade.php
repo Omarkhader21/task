@@ -3,7 +3,7 @@
             <h3 class="text-xl font-semibold mb-3">
                 All categories
             </h3>
-            @foreach ($categories as $category)
+            @foreach (\App\Models\Category::select('categories.id', 'categories.name', 'categories.slug', DB::raw('count(*) as total'))->join('category_post', 'categories.id', '=', 'category_post.category_id')->groupBy('categories.id')->orderByDesc('total')->limit(5)->get() as $category)
                 <a href="{{ route('by-category', $category) }}"
                     class="text-semibold block py-2 px-3 rounded {{ request('category')?->slug === $category->slug ? 'bg-blue-600 text-white' : '' }}">
                     {{ $category->name }} ({{ $category->total }})
